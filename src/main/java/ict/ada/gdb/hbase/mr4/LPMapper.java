@@ -22,13 +22,16 @@ public class LPMapper extends TableMapper<Text, Text> {
     private static Jedis jedis = RedisInstance.getInstance().getService();
 
     //private double f ;
-    private static String maxSetKey = "maxSetKey**";
+   //private static String maxSetKey = "maxSetKey**";
+
+    private MaxSetKey setKey = null;
 
 
     //private static  int iterNum = 0;
     public LPMapper(int iterNum) {
         //f = 3;
-        maxSetKey = maxSetKey + (iterNum == 1 ? "" : iterNum - 1);
+        setKey = new MaxSetKey(iterNum-1);
+
     }
 
     //private long count = 0;
@@ -98,7 +101,9 @@ public class LPMapper extends TableMapper<Text, Text> {
 
     private boolean isOkSet(String headId) {
 
-        return jedis.sismember(maxSetKey, headId);
+        return setKey.exist(headId);
+
+        //return jedis.sismember(maxSetKey, headId);
     }
 
 }

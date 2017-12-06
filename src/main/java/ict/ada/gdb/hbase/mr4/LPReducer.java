@@ -18,17 +18,21 @@ import java.util.Map;
  * Created by lon on 17-2-23.
  */
 public class LPReducer extends TableReducer<Text, Text, ImmutableBytesWritable> {
-    static int iterNum = 0;
+
 
     private static Jedis jedis = RedisInstance.getInstance().getService();
 
-
-    private static String maxSetKey = "maxSetKey**";
+    //private static String maxSetKey = "maxSetKey**";
 
     //private static  int iterNum = 0;
+
+    private MaxSetKey setKey = null;
+
+
     public LPReducer(int iterNum) {
         //f = 3;
-        maxSetKey = maxSetKey + (iterNum);
+
+        setKey = new MaxSetKey(iterNum);
     }
 
 
@@ -69,7 +73,7 @@ public class LPReducer extends TableReducer<Text, Text, ImmutableBytesWritable> 
 
             jedis.set(v+ ConstantMR.PATTERN, maxLabel);
 
-            jedis.sadd(maxSetKey,v);
+            setKey.addKey(v);
         }
 
 
